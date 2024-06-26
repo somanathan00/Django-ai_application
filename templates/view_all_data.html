@@ -1,0 +1,127 @@
+{% load static %}
+{% load pwa %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Load PWA meta tags -->
+    {% progressive_web_app_meta %}
+
+    <!-- Link to your manifest.json -->
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <title>AI App</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #007bff; /* Header color */
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .upload-button {
+            margin-top: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            background-color: #525f7f;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #fffffff;
+            padding: 12px 15px;
+            text-align: center;
+            color: #e0e0e0; /* Table text color */
+        }
+
+        img {
+            max-width: 80px;
+            max-height: 100px;
+            border-radius: 5px;
+            display: block;
+            margin: 0 auto; /* Centers images horizontally */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AI App</h1>
+        <button class="upload-button">Upload Image</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Object</th>
+                <th>Color</th>
+                <th>Quantity</th>
+                <th>Dimensions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for image_info in image_infos %}
+                <tr>
+                    <td><img src="{{ image_info.image.url }}" alt="{{ image_info.what_the_image_is }}"></td>
+                    <td>{{ image_info.what_the_image_is }}</td>
+                    <td>{{ image_info.color }}</td>
+                    <td>{{ image_info.quantity }}</td>
+                    <td>{{ image_info.dimensions }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('{% static 'js/serviceworker.js' %}')
+            .then(function(registration) {
+              console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch(function(error) {
+              console.error('Service Worker registration failed:', error);
+            });
+        }
+
+        // JavaScript for upload button functionality can be added here
+        // Example: 
+        // document.querySelector('.upload-button').addEventListener('click', function() {
+        //     // Implement your upload logic here
+        // });
+    </script>
+</body>
+</html>

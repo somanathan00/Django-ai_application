@@ -1,0 +1,142 @@
+{% load static %}
+{% load pwa %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Load PWA meta tags -->
+    {% progressive_web_app_meta %}
+
+    <!-- Link to your manifest.json -->
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+
+    <title>Upload File</title>
+    <style>
+        /* styles.css */
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .container h1 {
+            font-size: 24px;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            display: flex;
+            margin: 0 auto 10px;
+            padding: 10px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            width: calc(100% - 20px);
+            background: #2a2a2a;
+            color: none;
+            transition: border-color 0.3s, background 0.3s;
+            
+        }
+
+        input[type="text"]:hover,
+        input[type="text"]:focus,
+        input[type="file"]:hover,
+        input[type="file"]:focus {
+            border-color: #007bff;
+            background: #333;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .containers {
+    position: absolute;
+    top: 20px; /* Adjust this value to set the distance from the top */
+    right: 20px; /* Adjust this value to set the distance from the right */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.containers button {
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.containers button:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+    </style>
+</head>
+<body>
+    <div class="containers">
+        <a href='/view-all-data/'><button>View All Data</button></a>
+    </div> 
+    <div class="container">
+        <h1>Upload Image</h1>
+        <form action="/upload/" method="post" enctype="multipart/form-data">
+            <input type="file" id="image" name="image"  accept="image/*" required>
+            <button type="submit">Describe The Image</button>
+        </form>
+
+        <h1>Upload Audio</h1>
+        <form action="{% url 'transcribe_audio' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="file" accept="audio/*" required>
+            <button type="submit">Convert It Into Text</button>
+        </form>
+    </div>
+    
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('{% static 'js/serviceworker.js' %}')
+            .then(function(registration) {
+                console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch(function(error) {
+                console.error('Service Worker registration failed:', error);
+            });
+    }
+    </script>
+</body>
+</html>
